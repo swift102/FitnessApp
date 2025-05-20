@@ -1,39 +1,38 @@
-export interface ActivityElement {
-    uid: string;
-    title: string;
-    timeFrame?: number;
-    groupCount?: number;
-    repetitions?: number;
-    gear: string[];
-    steps: string;
+// src/app/models/user.model.ts
+export interface User {
+    id: string;
+    email: string;
+    password: string; // Note: In a real app, never store plain passwords
   }
   
-  export interface FitnessProgram {
-    uid: string;
+  // src/app/models/workout.model.ts
+  export interface Workout {
+    id: string;
     title: string;
-    category: string;
-    summary: string;
-    coverImage: string;
-    timeFrame: number;
+    type: string;
+    description: string;
+    imageUrl: string;
     intensityLevel: string;
     gear: string[];
-    activityElements: ActivityElement[];
-    workout: string;
+    timeFrame: number;
+    duration: number; // in minutes
+    exercises: Exercise[];
   }
   
-  // src/app/models/tracking.model.ts
-  export interface ActivityTracking {
-    programId: string;
-    completionTime: string;
+  export interface Exercise {
+    id: string;
+    name: string;
+    description: string;
+    duration: number; // in seconds
+    sets?: number;
+    reps?: number;
+    equipment: string[];
+  }
+  
+  // src/app/models/progress.model.ts
+  export interface WorkoutProgress {
     userId: string;
-    progress: string;
+    workoutId: string;
+    completed: boolean;
+    completedDate: Date;
   }
-  
-  // src/app/models/member.model.ts
-  export interface Member {
-    uid: string;
-    emailAddress: string;
-    displayName: string;
-    credentials: string; // Note: In production, never store passwords in plain text
-  }
-  

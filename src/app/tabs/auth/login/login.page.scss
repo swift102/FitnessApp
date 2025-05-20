@@ -1,0 +1,144 @@
+/* src/app/auth/login/login.page.scss */
+.auth-header {
+    --background: transparent;
+    ion-toolbar {
+      --background: linear-gradient(135deg, #4d7bf3, #5e3bc9);
+      border-radius: 0 0 24px 24px;
+      
+      ion-title.logo-title {
+        font-family: 'Arial', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        color: white;
+        text-align: center;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
+  
+  .auth-content {
+    --background: #f9f9f9;
+    
+    .login-container {
+      padding: 20px;
+      max-width: 400px;
+      margin: 20px auto;
+      
+      .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+        
+        h1 {
+          font-size: 26px;
+          color: #333;
+          margin-bottom: 8px;
+          font-weight: 700;
+        }
+        
+        p {
+          color: #666;
+          font-size: 16px;
+        }
+      }
+      
+      .form-list {
+        background: transparent;
+        padding: 0;
+        
+        .form-input {
+          --background: white;
+          --border-radius: 12px;
+          --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+          margin-bottom: 16px;
+          --highlight-height: 0;
+          
+          ion-icon {
+            color: #4d7bf3;
+            font-size: 20px;
+            margin-right: 8px;
+          }
+          
+          ion-label {
+            color: #666;
+            font-weight: 500;
+          }
+          
+          ion-input {
+            --padding-start: 8px;
+            font-size: 16px;
+          }
+        }
+      }
+      
+      .error-message {
+        color: #ff4961;
+        font-size: 12px;
+        margin-left: 16px;
+        margin-top: -12px;
+        margin-bottom: 16px;
+      }
+      
+      .login-button {
+        margin-top: 24px;
+        --background: linear-gradient(135deg, #4d7bf3, #5e3bc9);
+        --border-radius: 12px;
+        --box-shadow: 0 4px 12px rgba(77, 123, 243, 0.3);
+        font-weight: 600;
+        height: 48px;
+        font-size: 16px;
+        letter-spacing: 0.5px;
+        
+        &:hover {
+          --background: linear-gradient(135deg, #3a68e0, #4d2ab5);
+        }
+      }
+      
+      .signup-prompt {
+        margin-top: 40px;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        
+        p {
+          color: #666;
+          margin: 0;
+        }
+        
+        .signup-link {
+          --color: #4d7bf3;
+          font-weight: 600;
+          --padding-start: 8px;
+          --padding-end: 8px;
+          height: 30px;
+          font-size: 15px;
+        }
+      }
+    }
+  }
+  
+  /* Animation for form elements */
+  ion-item.form-input {
+    transform: translateY(20px);
+    opacity: 0;
+    animation: fadeInUp 0.5s forwards;
+    
+    @for $i from 1 through 5 {
+      &:nth-child(#{$i}) {
+        animation-delay: #{$i * 0.1}s;
+      }
+    }
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }

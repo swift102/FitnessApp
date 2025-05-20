@@ -33,4 +33,24 @@ export const routes: Routes = [
     redirectTo: '/tabs/tab1',
     pathMatch: 'full',
   },
+  {
+    path: 'login',
+    loadComponent: () => import('./auth/login/login.page').then( m => m.LoginPage)
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./auth/register/register.page').then( m => m.RegisterPage)
+  },
+  {
+    path: 'workouts',
+    loadComponent: () => import('./workouts/workouts.page').then( m => m.WorkoutsPage)
+  },
+  {
+    path: 'workout-detail',
+    loadComponent: () => import('./workout-detail/workout-detail.page').then( m => m.WorkoutDetailPage)
+  },
+  {
+    path: 'progress',
+    loadComponent: () => import('./progress/progress.page').then( m => m.ProgressPage)
+  },
 ];
