@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content *ngIf="workoutData">
+<ion-content class="ion-padding" *ngIf="workoutData">
   <div class="workout-banner">
     <img [src]="workoutData.coverImage" alt="{{ workoutData.title }}" class="banner-image" />
     
@@ -17,17 +17,17 @@
       
       <div class="workout-stats">
         <ion-chip>
-          <ion-icon name="hourglass-outline"></ion-icon>
+          <ion-icon name="hourglass-outline" aria-hidden="true"></ion-icon>
           <ion-label>{{ workoutData.timeFrame }} min</ion-label>
         </ion-chip>
         
         <ion-chip>
-          <ion-icon name="fitness-outline"></ion-icon>
+          <ion-icon name="fitness-outline" aria-hidden="true"></ion-icon>
           <ion-label>{{ workoutData.category }}</ion-label>
         </ion-chip>
         
         <ion-chip>
-          <ion-icon name="speedometer-outline"></ion-icon>
+          <ion-icon name="speedometer-outline" aria-hidden="true"></ion-icon>
           <ion-label>{{ workoutData.intensityLevel }}</ion-label>
         </ion-chip>
       </div>
@@ -35,7 +35,7 @@
       <h3>Required Equipment</h3>
       <ion-list lines="none">
         <ion-item *ngFor="let equipment of workoutData.gear">
-          <ion-icon name="checkmark-circle-outline" slot="start" color="success"></ion-icon>
+          <ion-icon name="checkmark-circle-outline" slot="start" color="success" aria-hidden="true"></ion-icon>
           <ion-label>{{ equipment }}</ion-label>
         </ion-item>
       </ion-list>
@@ -71,12 +71,12 @@
   
   <div class="workout-actions">
     <ion-button expand="block" (click)="completeWorkout()" [disabled]="workoutCompleted" *ngIf="!workoutCompleted">
-      <ion-icon name="trophy-outline" slot="start"></ion-icon>
+      <ion-icon name="trophy-outline" slot="start" aria-hidden="true"></ion-icon>
       Complete This Workout
     </ion-button>
     
     <ion-button expand="block" disabled *ngIf="workoutCompleted" color="success">
-      <ion-icon name="trophy" slot="start"></ion-icon>
+      <ion-icon name="trophy" slot="start" aria-hidden="true"></ion-icon>
       Workout Completed
     </ion-button>
   </div>

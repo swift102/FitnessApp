@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/tab3"></ion-back-button>
     </ion-buttons>
     <ion-title>Fitness Progress</ion-title>
     <ion-buttons slot="end">
@@ -46,9 +46,9 @@
     </ion-list>
     
     <div class="empty-state" *ngIf="workoutHistory.length === 0">
-      <ion-icon name="barbell-outline" size="large"></ion-icon>
+         <ion-icon name="barbell" size="large"></ion-icon>
       <p>No completed workouts found.</p>
-      <ion-button routerLink="/workout-list">Find Workouts</ion-button>
+      <ion-button routerLink="/tabs/workouts">Find Workouts</ion-button>
     </div>
 
     <div class="ion-padding ion-text-center">

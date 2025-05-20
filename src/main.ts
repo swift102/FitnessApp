@@ -5,10 +5,25 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
+import { addIcons } from 'ionicons';
+import { fitnessOutline, mailOutline, trendingUpOutline, lockClosedOutline, homeOutline, home,barbell, logOut } from 'ionicons/icons';
+
+
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
   ],
+});
+
+addIcons({
+  'fitness-outline': fitnessOutline,
+  'mail-outline': mailOutline,
+  'trending-up-outline': trendingUpOutline,
+  'lock-closed-outline': lockClosedOutline,
+  'barbell': barbell,
+  'home' : home,
+  'log-out-outline' : logOut,
+
 });

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ToastController } from '@ionic/angular';
 import { IonicModule } from '@ionic/angular';
@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FitnessService } from 'src/services/fitness.service';
 import { ProgressTrackingService } from 'src/services/progress-tracking.service';
 import { FitnessProgram } from 'src/model/fitness';
+import { IonContent } from '@ionic/angular';
+
 @Component({
   selector: 'app-workout-detail',
   templateUrl: './workout-detail.page.html',
@@ -14,8 +16,11 @@ import { FitnessProgram } from 'src/model/fitness';
    imports: [IonicModule, CommonModule]
 })
 export class WorkoutDetailPage implements OnInit {
+
+     
  workoutData?: FitnessProgram;
   workoutCompleted = false;
+
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -28,6 +33,7 @@ export class WorkoutDetailPage implements OnInit {
     this.loadWorkoutDetails();
   }
 
+  
   async loadWorkoutDetails() {
     // Get workout ID from route params
     const uid = this.activatedRoute.snapshot.paramMap.get('uid');
