@@ -7,46 +7,54 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="registration-content">
   <div class="registration-container">
-    <h1>Join Our Community</h1>
-    <p>Begin your fitness journey with us</p>
+    <div class="header-section">
+      <h1>Join Our Community</h1>
+      <p>Begin your fitness journey with us</p>
+    </div>
     
     <form [formGroup]="registrationForm" (ngSubmit)="submitRegistration()">
-      <ion-item>
-        <ion-label position="floating">Full Name</ion-label>
-        <ion-input type="text" formControlName="name"></ion-input>
-      </ion-item>
+      <div class="input-group">
+        <ion-label>Full Name</ion-label>
+        <ion-input type="text" formControlName="name" placeholder="Enter your full name"></ion-input>
+      </div>
       <div class="validation-error" *ngIf="registrationForm.get('name')?.invalid && registrationForm.get('name')?.touched">
+        <ion-icon name="alert-circle-outline"></ion-icon>
         Please enter your name
       </div>
       
-      <ion-item>
-        <ion-label position="floating">Email Address</ion-label>
-        <ion-input type="email" formControlName="email"></ion-input>
-      </ion-item>
+      <div class="input-group">
+        <ion-label>Email Address</ion-label>
+        <ion-input type="email" formControlName="email" placeholder="example@email.com"></ion-input>
+      </div>
       <div class="validation-error" *ngIf="registrationForm.get('email')?.invalid && registrationForm.get('email')?.touched">
+        <ion-icon name="alert-circle-outline"></ion-icon>
         Enter a valid email address
       </div>
       
-      <ion-item>
-        <ion-label position="floating">Create Password</ion-label>
-        <ion-input type="password" formControlName="password"></ion-input>
-      </ion-item>
+      <div class="input-group">
+        <ion-label>Create Password</ion-label>
+        <ion-input type="password" formControlName="password" placeholder="••••••"></ion-input>
+      </div>
       <div class="validation-error" *ngIf="registrationForm.get('password')?.invalid && registrationForm.get('password')?.touched">
+        <ion-icon name="alert-circle-outline"></ion-icon>
         Password must be at least 6 characters long
       </div>
       
-      <ion-item>
-        <ion-label position="floating">Verify Password</ion-label>
-        <ion-input type="password" formControlName="passwordConfirm"></ion-input>
-      </ion-item>
+      <div class="input-group">
+        <ion-label>Verify Password</ion-label>
+        <ion-input type="password" formControlName="passwordConfirm" placeholder="••••••"></ion-input>
+      </div>
       <div class="validation-error" *ngIf="registrationForm.get('passwordConfirm')?.errors?.['passwordMismatch'] && registrationForm.get('passwordConfirm')?.touched">
+        <ion-icon name="alert-circle-outline"></ion-icon>
         Passwords must match
       </div>
       
       <div class="form-actions">
-        <ion-button expand="block" type="submit" [disabled]="registrationForm.invalid">Create Account</ion-button>
+        <ion-button expand="block" type="submit" [disabled]="registrationForm.invalid" class="create-account-button">
+          Create Account
+        </ion-button>
         <p class="login-redirect">Already registered? <a (click)="navigateToLogin()">Sign In</a></p>
       </div>
     </form>
