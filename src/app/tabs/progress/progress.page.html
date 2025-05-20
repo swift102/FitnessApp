@@ -1,13 +1,65 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>progress</ion-title>
+    <ion-title>My Progress</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="confirmReset()" *ngIf="completedWorkouts.length > 0" 
+        class="reset-button">
+        <ion-icon name="refresh-outline" slot="start"></ion-icon>
+        <span class="reset-text">RESET</span>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">progress</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <div class="progress-container">
+    <div class="progress-header">
+      <div class="progress-stats">
+        <div class="stat-card">
+          <div class="stat-number">{{ completedWorkouts.length }}</div>
+          <div class="stat-label">Workouts Completed</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ totalMinutes }}</div>
+          <div class="stat-label">Total Minutes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ streak }}</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">
+        <span>Completed Workouts</span>
+      </h2>
+      
+      <div class="no-progress" *ngIf="completedWorkouts.length === 0">
+        <ion-icon name="fitness-outline"></ion-icon>
+        <p>No workouts completed yet</p>
+        <ion-button (click)="navigateToWorkouts()" fill="clear">Browse Workouts</ion-button>
+      </div>
+
+      <ion-list class="completed-list" *ngIf="completedWorkouts.length > 0">
+        <ion-item *ngFor="let item of completedWorkouts" class="completed-item">
+          <div class="completed-content">
+            <div class="completed-image-container">
+              <img [src]="item.workout.imageUrl" [alt]="item.workout.title">
+            </div>
+            <div class="completed-info">
+              <h3 class="completed-title">{{ item.workout.title }}</h3>
+              <div class="completed-meta">
+                <div class="meta-item">
+                  <ion-icon name="time-outline"></ion-icon>
+                  <span>{{ item.workout.duration }} min</span>
+                </div>
+              </div>
+              <div class="completed-type-badge">{{ item.workout.type }}</div>
+            </div>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+  </div>
 </ion-content>
