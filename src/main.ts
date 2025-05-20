@@ -6,7 +6,7 @@ import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
 import { addIcons } from 'ionicons';
-import { fitnessOutline, mailOutline, trendingUpOutline, lockClosedOutline, homeOutline, home,barbell, logOut } from 'ionicons/icons';
+import { fitnessOutline, mailOutline, checkmarkCircleOutline,trendingUpOutline, lockClosedOutline, homeOutline, home,barbell, logOut, speedometerOutline, hourglassOutline, trophyOutline, refreshCircleOutline } from 'ionicons/icons';
 
 
 bootstrapApplication(AppComponent, {
@@ -25,5 +25,10 @@ addIcons({
   'barbell': barbell,
   'home' : home,
   'log-out-outline' : logOut,
+  'speedometer-outline' : speedometerOutline,
+  'checkmark-circle-outline': checkmarkCircleOutline,
+  'hourglass-outline': hourglassOutline,
+  'trophy-outline': trophyOutline,
+  'refresh-circle-outline': refreshCircleOutline,
 
 });

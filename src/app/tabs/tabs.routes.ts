@@ -45,7 +45,7 @@ export const routes: Routes = [
     loadComponent: () => import('./workouts/workouts.page').then( m => m.WorkoutsPage)
   },
  {
-    path: 'workout-detail/:id',
+    path: 'workout-detail/:uid',
     loadComponent: () => import('./workout-detail/workout-detail.page').then( m => m.WorkoutDetailPage)
   },
   {
