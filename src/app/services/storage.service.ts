@@ -1,6 +1,6 @@
 // src/app/services/storage.service.ts
 import { Injectable } from '@angular/core';
-import { WorkoutProgress } from '../models/Models';
+import { WorkoutProgress } from 'src/model/fitness';
 import { Observable, of } from 'rxjs';
 
 @Injectable({

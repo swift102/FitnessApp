@@ -6,16 +6,15 @@ export const routes: Routes = [
     path: 'tabs',
     component: TabsPage,
     children: [
-      {
-        path: 'tab1',
-        loadComponent: () =>
-          import('../tab1/tab1.page').then((m) => m.Tab1Page),
+    {
+        path: 'workouts',
+        loadComponent: () => import('./workouts/workouts.page').then( m => m.WorkoutsPage)
       },
       {
-        path: 'tab2',
-        loadComponent: () =>
-          import('../tab2/tab2.page').then((m) => m.Tab2Page),
+        path: 'progress',
+        loadComponent: () => import('./progress/progress.page').then( m => m.ProgressPage)
       },
+    
       {
         path: 'tab3',
         loadComponent: () =>
@@ -23,14 +22,14 @@ export const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/login',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/login',
     pathMatch: 'full',
   },
   {
@@ -45,8 +44,8 @@ export const routes: Routes = [
     path: 'workouts',
     loadComponent: () => import('./workouts/workouts.page').then( m => m.WorkoutsPage)
   },
-  {
-    path: 'workout-detail',
+ {
+    path: 'workout-detail/:id',
     loadComponent: () => import('./workout-detail/workout-detail.page').then( m => m.WorkoutDetailPage)
   },
   {

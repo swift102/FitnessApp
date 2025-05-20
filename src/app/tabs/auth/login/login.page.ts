@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup,FormsModule ,ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
-import { AuthService } from 'src/app/services/auth.service';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, ToastController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
+import { ErrorHandling } from 'src/services/error-handling.service';
+import { finalize } from 'rxjs/operators';
+import { MemberService } from 'src/services/member.service';
 
 
 @Component({
@@ -12,61 +13,75 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonicModule,ReactiveFormsModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, ReactiveFormsModule]
 })
-export class LoginPage implements OnInit {
- loginForm: FormGroup;
+export class LoginPage
+{  accessForm: FormGroup;
+  isLoading = false;
+  formSubmitted = false;
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
+    private memberService: MemberService,
     private router: Router,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private errorService: ErrorHandling
   ) {
-    this.loginForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+    this.accessForm = this.formBuilder.group({
+      emailAddress: ['', [Validators.required, Validators.email]],
+      credentials: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  ngOnInit() {
-    // Check if user is already logged in
-    if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/tabs/tab3']);
+  // Convenience getters for form fields
+  get email() { return this.accessForm.get('emailAddress'); }
+  get password() { return this.accessForm.get('credentials'); }
+
+  // Get error message for a specific form control
+  getErrorMessage(controlName: string): string {
+    const control = this.accessForm.get(controlName);
+    if (control?.invalid && (control?.dirty || control?.touched || this.formSubmitted)) {
+      return this.errorService.getFormValidationMessage(controlName, control.errors);
     }
+    return '';
   }
 
-  login() {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.login(email, password).subscribe(
-        user => {
-          if (user) {
-            this.router.navigate(['/tabs/tab3']);
-          } else {
-            this.presentToast('Invalid email or password');
-          }
-        },
-        error => {
-          this.presentToast('Login failed: ' + error.message);
+  async handleLogin() {
+    this.formSubmitted = true;
+    
+    if (this.accessForm.invalid) {
+      Object.keys(this.accessForm.controls).forEach(key => {
+        const control = this.accessForm.get(key);
+        if (control?.invalid) {
+          control.markAsTouched();
+          console.log(`${key} validation failed:`, control.errors);
         }
-      );
-    } else {
-      this.presentToast('Please fill all required fields');
+      });
+      return;
+    }
+
+    const { emailAddress, credentials } = this.accessForm.value;
+    this.isLoading = true;
+    
+    try {
+      const authenticated = await this.memberService.authenticate(emailAddress, credentials);
+      
+      if (authenticated) {
+        this.router.navigateByUrl('/tabs/tab3');
+      } else {
+        this.errorService.handleError(
+          { message: 'Invalid email or password', code: 'AUTH_INVALID' }, 
+          'Login'
+        );
+      }
+    } catch (error) {
+      this.errorService.handleError(error, 'Login');
+    } finally {
+      this.isLoading = false;
     }
   }
-
-  async presentToast(message: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      position: 'bottom',
-      color: 'danger'
-    });
-    toast.present();
-  }
-
-  goToSignup() {
-    this.router.navigate(['/signup']);
+  
+  navigateToRegistration() {
+    this.router.navigateByUrl('/register');
   }
 }

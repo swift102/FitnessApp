@@ -1,144 +1,146 @@
-/* src/app/auth/login/login.page.scss */
-.auth-header {
-    --background: transparent;
-    ion-toolbar {
-      --background: linear-gradient(135deg, #4d7bf3, #5e3bc9);
-      border-radius: 0 0 24px 24px;
-      
-      ion-title.logo-title {
-        font-family: 'Arial', sans-serif;
-        font-size: 24px;
-        font-weight: 700;
-        letter-spacing: 1px;
-        color: white;
-        text-align: center;
-        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
+// src/app/pages/login/login.page.scss
+.auth-content {
+  --background: linear-gradient(135deg, var(--ion-color-primary) 0%, var(--ion-color-secondary) 100%);
+  position: relative;
+  height: 100%;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.brand-section {
+  padding: 48px 24px 24px;
+  text-align: center;
+  color: white;
+  
+  .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 16px;
+    
+    .brand-logo {
+      font-size: 64px;
+      margin-right: 12px;
+      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+    }
+    
+    .brand-name {
+      font-size: 42px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
   }
   
-  .auth-content {
-    --background: #f9f9f9;
+  .tagline {
+    font-size: 18px;
+    font-weight: 300;
+    opacity: 0.9;
+    margin: 0;
+  }
+}
+
+.form-section {
+  background-color: white;
+  border-radius: 24px 24px 0 0;
+  padding: 32px 24px;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.08);
+  flex-grow: 1;
+  position: relative;
+  z-index: 10;
+  
+  .form-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ion-color-dark);
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+  
+  .input-group {
+    display: flex;
+    align-items: center;
+    background-color: #f7f9fc;
+    border-radius: 12px;
+    margin-bottom: 4px;
+    padding: 4px 16px;
+    transition: all 0.2s ease;
     
-    .login-container {
-      padding: 20px;
-      max-width: 400px;
-      margin: 20px auto;
+    &:focus-within {
+      background-color: #eff3fa;
+      box-shadow: 0 0 0 2px rgba(var(--ion-color-primary-rgb), 0.2);
+    }
+    
+    .input-icon {
+      font-size: 20px;
+      color: var(--ion-color-medium);
+      margin-right: 12px;
+    }
+    
+    .auth-input {
+      --background: transparent;
+      --padding-start: 0;
+      font-size: 16px;
+      --color: var(--ion-color-dark);
+    }
+  }
+
+  .error-hint {
+    padding-left: 36px;
+    margin-bottom: 16px;
+  }
+
+  .form-actions {
+    margin-top: 32px;
+    
+    ion-button {
+      margin-bottom: 20px;
+      --box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.3);
+    }
+    
+    .signup-link {
+      text-align: center;
+      font-size: 14px;
+      color: var(--ion-color-medium);
       
-      .login-header {
-        text-align: center;
-        margin-bottom: 30px;
-        
-        h1 {
-          font-size: 26px;
-          color: #333;
-          margin-bottom: 8px;
-          font-weight: 700;
-        }
-        
-        p {
-          color: #666;
-          font-size: 16px;
-        }
-      }
-      
-      .form-list {
-        background: transparent;
-        padding: 0;
-        
-        .form-input {
-          --background: white;
-          --border-radius: 12px;
-          --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-          margin-bottom: 16px;
-          --highlight-height: 0;
-          
-          ion-icon {
-            color: #4d7bf3;
-            font-size: 20px;
-            margin-right: 8px;
-          }
-          
-          ion-label {
-            color: #666;
-            font-weight: 500;
-          }
-          
-          ion-input {
-            --padding-start: 8px;
-            font-size: 16px;
-          }
-        }
-      }
-      
-      .error-message {
-        color: #ff4961;
-        font-size: 12px;
-        margin-left: 16px;
-        margin-top: -12px;
-        margin-bottom: 16px;
-      }
-      
-      .login-button {
-        margin-top: 24px;
-        --background: linear-gradient(135deg, #4d7bf3, #5e3bc9);
-        --border-radius: 12px;
-        --box-shadow: 0 4px 12px rgba(77, 123, 243, 0.3);
+      a {
+        color: var(--ion-color-primary);
         font-weight: 600;
-        height: 48px;
-        font-size: 16px;
-        letter-spacing: 0.5px;
-        
-        &:hover {
-          --background: linear-gradient(135deg, #3a68e0, #4d2ab5);
-        }
-      }
-      
-      .signup-prompt {
-        margin-top: 40px;
-        text-align: center;
-        display: flex;
-        flex-direction: row;
-        justify-content: center;
-        align-items: center;
-        
-        p {
-          color: #666;
-          margin: 0;
-        }
-        
-        .signup-link {
-          --color: #4d7bf3;
-          font-weight: 600;
-          --padding-start: 8px;
-          --padding-end: 8px;
-          height: 30px;
-          font-size: 15px;
-        }
+        text-decoration: none;
+        cursor: pointer;
       }
     }
+  }
+}
+
+// Loading state
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  
+  ion-spinner {
+    --color: var(--ion-color-primary);
+    transform: scale(1.5);
+    margin-bottom: 16px;
   }
   
-  /* Animation for form elements */
-  ion-item.form-input {
-    transform: translateY(20px);
-    opacity: 0;
-    animation: fadeInUp 0.5s forwards;
-    
-    @for $i from 1 through 5 {
-      &:nth-child(#{$i}) {
-        animation-delay: #{$i * 0.1}s;
-      }
-    }
+  p {
+    font-weight: 500;
+    color: var(--ion-color-dark);
   }
-  
-  @keyframes fadeInUp {
-    from {
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    to {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
+}

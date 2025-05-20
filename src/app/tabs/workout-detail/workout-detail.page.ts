@@ -1,81 +1,74 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { ToastController } from '@ionic/angular';
-import { WorkoutService } from 'src/app/services/workout.service';
-import { StorageService } from 'src/app/services/storage.service';
-import { AuthService } from 'src/app/services/auth.service';
-import { Workout, WorkoutProgress } from 'src/model/fitness';
 import { IonicModule } from '@ionic/angular';
-
+import { CommonModule } from '@angular/common';
+import { FitnessService } from 'src/services/fitness.service';
+import { ProgressTrackingService } from 'src/services/progress-tracking.service';
+import { FitnessProgram } from 'src/model/fitness';
 @Component({
   selector: 'app-workout-detail',
   templateUrl: './workout-detail.page.html',
   styleUrls: ['./workout-detail.page.scss'],
   standalone: true,
-   imports: [IonicModule, CommonModule, FormsModule]
+   imports: [IonicModule, CommonModule]
 })
 export class WorkoutDetailPage implements OnInit {
-
-  workout: Workout | undefined;
-  isWorkoutCompleted = false;
-  userProgress: WorkoutProgress[] = [];
+ workoutData?: FitnessProgram;
+  workoutCompleted = false;
 
   constructor(
-    private route: ActivatedRoute,
-    private workoutService: WorkoutService,
-    private storageService: StorageService,
-    private authService: AuthService,
-    private toastController: ToastController
-  ) { }
+    private activatedRoute: ActivatedRoute,
+    private fitnessService: FitnessService,
+    private progressTracker: ProgressTrackingService,
+    private toastCtrl: ToastController
+  ) {}
 
   ngOnInit() {
-    this.loadWorkout();
+    this.loadWorkoutDetails();
   }
 
-  loadWorkout() {
-    const workoutId = this.route.snapshot.paramMap.get('id');
+  async loadWorkoutDetails() {
+    // Get workout ID from route params
+    const uid = this.activatedRoute.snapshot.paramMap.get('uid');
+
     
-    if (workoutId) {
-      // Get workout details
-      this.workoutService.getWorkoutById(workoutId).subscribe(workout => {
-        this.workout = workout;
-        
-        // Check if the workout is already completed
-        const currentUser = this.authService.getCurrentUser();
-        if (currentUser) {
-          this.storageService.getUserProgress(currentUser.id).subscribe(progress => {
-            this.userProgress = progress;
-            this.isWorkoutCompleted = this.userProgress.some(
-              p => p.workoutId === workoutId && p.completed
-            );
-          });
-        }
-      });
+    if (uid) {
+      // Load workout details
+      this.workoutData = await this.fitnessService.findProgramById(uid);
+      
+      // Check completion status
+      this.checkCompletionStatus(uid);
     }
   }
 
-  markAsCompleted() {
-    const currentUser = this.authService.getCurrentUser();
+  checkCompletionStatus(workoutId: string) {
+    this.workoutCompleted = this.progressTracker.isProgramCompleted(workoutId);
+  }
+
+  async completeWorkout() {
+    if (!this.workoutData) return;
     
-    if (currentUser && this.workout && !this.isWorkoutCompleted) {
-      this.storageService.markWorkoutCompleted(currentUser.id, this.workout.id).subscribe(success => {
-        if (success) {
-          this.isWorkoutCompleted = true;
-          this.presentToast('Workout marked as completed!');
-        }
-      });
+    const result = await this.progressTracker.markProgramCompleted(this.workoutData.uid);
+    
+    if (result) {
+      // Update completion status
+      this.workoutCompleted = true;
+      
+      // Show success message
+      await this.showNotification('Congratulations! Workout completed!', 'success');
+    } else {
+      // Show login required message
+      await this.showNotification('Please log in to track your progress', 'warning');
     }
   }
 
-  async presentToast(message: string) {
-    const toast = await this.toastController.create({
+  async showNotification(message: string, color: string) {
+    const toast = await this.toastCtrl.create({
       message,
       duration: 2000,
-      position: 'bottom',
-      color: 'success'
+      color
     });
-    toast.present();
+    await toast.present();
   }
 }

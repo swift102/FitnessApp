@@ -36,3 +36,42 @@ export interface User {
     completed: boolean;
     completedDate: Date;
   }
+
+
+  
+  export interface FitnessProgram {
+    uid: string;
+    title: string;
+    category: string;
+    summary: string;
+    coverImage: string;
+    timeFrame: number;
+    intensityLevel: string;
+    gear: string[];
+    activityElements: ActivityElement[];
+    workout: string;
+  }
+
+  export interface ActivityElement {
+    uid: string;
+    title: string;
+    timeFrame?: number;
+    groupCount?: number;
+    repetitions?: number;
+    gear: string[];
+    steps: string;
+  }
+
+   export interface ActivityTracking {
+    programId: string;
+    completionTime: string;
+    userId: string;
+    progress: string;
+  }
+  
+  export interface Member {
+    uid: string;
+    emailAddress: string;
+    displayName: string;
+    credentials: string; // Note: In production, never store passwords in plain text
+  }

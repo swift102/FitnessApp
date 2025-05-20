@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { FitnessService } from './fitness.service';
 import { MemberService } from './member.service';
-import { FitnessProgram, ActivityTracking } from 'src/app/model/fitness';
-
+import { FitnessProgram, ActivityTracking } from 'src/model/fitness';
 
 export interface ProgramCompletion {
   trackingData: ActivityTracking;

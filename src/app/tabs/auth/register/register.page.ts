@@ -1,98 +1,89 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { AuthService } from 'src/app/services/auth.service';
-import { IonicModule } from '@ionic/angular';
-
+import { IonicModule, ToastController } from '@ionic/angular';
+import { CommonModule } from '@angular/common';
+import { MemberService } from 'src/services/member.service';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.page.html',
   styleUrls: ['./register.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [IonicModule, CommonModule, ReactiveFormsModule]
 })
-export class RegisterPage implements OnInit {
+export class RegisterPage {
+registrationForm: FormGroup;
 
- signupForm!: FormGroup;
+constructor(
+  private fb: FormBuilder,
+  private memberService: MemberService,
+  private router: Router,
+  private toastCtrl: ToastController
+) {
+  // Initialize form with validation
+  this.registrationForm = this.createRegistrationForm();
+}
 
-  constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private alertController: AlertController
-  ) { }
+createRegistrationForm(): FormGroup {
+  return this.fb.group({
+    name: ['', [Validators.required]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]],
+    passwordConfirm: ['', [Validators.required]]
+  }, { validators: this.validatePasswordMatch });
+}
 
-  ngOnInit() {
-    this.signupForm = this.formBuilder.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, { 
-      validators: this.passwordMatchValidator
-    });
+validatePasswordMatch(formGroup: FormGroup) {
+  const pass = formGroup.get('password')?.value;
+  const confirmPass = formGroup.get('passwordConfirm')?.value;
+
+  if (pass !== confirmPass) {
+    formGroup.get('passwordConfirm')?.setErrors({ passwordMismatch: true });
+    return { passwordMismatch: true };
+  }
+  
+  return null;
+}
+
+async submitRegistration() {
+  console.log('Registration submitted', this.registrationForm.value);
+  
+  if (this.registrationForm.invalid) {
+    console.log('Form validation failed', this.registrationForm.errors);
+    await this.showToast('Please correct the errors in the form', 'danger');
+    return;
   }
 
-  passwordMatchValidator(form: FormGroup) {
-    const password = form.get('password')?.value;
-    const confirmPassword = form.get('confirmPassword')?.value;
+  try {
+    const { name, email, password } = this.registrationForm.value;
+    console.log('Registering user:', { name, email });
+    
+    const registrationSuccessful = await this.memberService.register(email, name, password);
 
-    if (password === confirmPassword) {
-      return null;
+    if (registrationSuccessful) {
+      await this.showToast('Registration successful!', 'success');
+      this.router.navigateByUrl('/login');
     } else {
-      return { passwordMismatch: true };
+      await this.showToast('Email already registered', 'danger');
     }
-  }
-
-  signup() {
-    if (this.signupForm.valid) {
-      const { email, password } = this.signupForm.value;
-      
-      this.authService.signup( email, password).subscribe(
-        success => {
-          if (success) {
-            this.presentSuccessAlert();
-          } else {
-            this.presentErrorAlert('An error occurred during signup. Please try again.');
-          }
-        },
-        error => {
-          this.presentErrorAlert('An error occurred during signup. Please try again.');
-        }
-      );
-    }
-  }
-
-  async presentSuccessAlert() {
-    const alert = await this.alertController.create({
-      header: 'Success',
-      message: 'Account created successfully! Please log in.',
-      buttons: [
-        {
-          text: 'OK',
-          handler: () => {
-            this.router.navigate(['/login']);
-          }
-        }
-      ]
-    });
-    await alert.present();
-  }
-
-  async presentErrorAlert(message: string) {
-    const alert = await this.alertController.create({
-      header: 'Error',
-      message: message,
-      buttons: ['OK']
-    });
-    await alert.present();
-  }
-
-  goToLogin() {
-    this.router.navigate(['/login']);
+  } catch (error) {
+    console.error('Registration error:', error);
+    const errorMessage = (error as any)?.message || 'Unknown error';
+    await this.showToast(`Registration failed: ${errorMessage}`, 'danger');
   }
 }
 
+async showToast(message: string, color: string) {
+  const toast = await this.toastCtrl.create({
+    message,
+    duration: 2000,
+    color
+  });
+  await toast.present();
+}
+
+navigateToLogin() {
+  this.router.navigateByUrl('/login');
+}
+}

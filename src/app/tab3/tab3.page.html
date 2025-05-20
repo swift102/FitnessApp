@@ -1,17 +1,52 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>GetFit App</ion-title>
+    
+    <ion-buttons slot="end">
+      <ion-button color="light" (click)="signOut()">
+        <ion-icon slot="start" name="log-out-outline"></ion-icon>
+        Logout
+      </ion-button>
+    </ion-buttons>
+    
   </ion-toolbar>
 </ion-header>
+  
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <div class="main-container">
+    <h1>Welcome to GetFit!</h1>
+    <p *ngIf="memberData">Hello, {{ memberData.displayName }}!</p>
+    
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Your Workouts</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>Browse our collection of workout programs designed for all fitness levels.</p>
+        <ion-button expand="block" (click)="goToWorkouts()">
+          <ion-icon name="fitness-outline" slot="start"></ion-icon>
+          Explore Workouts
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+    
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Your Progress</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="progress-stats">
+          <div class="stat-item">
+            <span class="stat-number">{{ finishedWorkouts }}</span>
+            <span class="stat-label">Completed Workouts</span>
+          </div>
+        </div>
+        <ion-button expand="block" (click)="goToProgress()">
+          <ion-icon name="trending-up-outline" slot="start"></ion-icon>
+          View Progress
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

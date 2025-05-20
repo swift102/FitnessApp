@@ -1,103 +1,44 @@
 import { Component, OnInit } from '@angular/core';
+import { IonicModule, AlertController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { AlertController, ToastController } from '@ionic/angular';
-import { AuthService } from 'src/app/services/auth.service';
-import { WorkoutService } from 'src/app/services/workout.service';
-import { StorageService } from 'src/app/services/storage.service';
-import { Workout, WorkoutProgress } from 'src/model/fitness';
-import { IonicModule } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { ProgramCompletion, ProgressTrackingService } from 'src/services/progress-tracking.service';
+import { MemberService } from 'src/services/member.service';
+import { Member } from 'src/model/fitness';
 
-interface CompletedWorkout {
-  workout: Workout;
-  progress: WorkoutProgress;
-}
 
 @Component({
   selector: 'app-progress',
   templateUrl: './progress.page.html',
   styleUrls: ['./progress.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+ imports: [IonicModule, CommonModule, RouterModule]
 })
 export class ProgressPage implements OnInit {
-
-  completedWorkouts: CompletedWorkout[] = [];
-  totalMinutes = 0;
-  streak = 0;
-
+workoutsCompleted = 0;
+  workoutHistory: ProgramCompletion[] = [];
+  
   constructor(
-    private workoutService: WorkoutService,
-    private storageService: StorageService,
-    private authService: AuthService,
-    private alertController: AlertController,
-    private toastController: ToastController,
-    private router: Router
-  ) { }
+    private progressTracker: ProgressTrackingService,
+    private memberService: MemberService,
+    private alertCtrl: AlertController
+  ) {}
 
-  ngOnInit() {
-    this.loadProgress();
-  }
+  ngOnInit() {}
 
   ionViewWillEnter() {
-    this.loadProgress();
+    this.loadProgressData();
   }
 
-  loadProgress() {
-    const currentUser = this.authService.getCurrentUser();
-    
-    if (currentUser) {
-      this.storageService.getUserProgress(currentUser.id).subscribe(progressList => {
-        // Reset data
-        this.completedWorkouts = [];
-        this.totalMinutes = 0;
-        
-        // Process each progress entry
-        progressList.forEach(progress => {
-          this.workoutService.getWorkoutById(progress.workoutId).subscribe(workout => {
-            if (workout) {
-              this.completedWorkouts.push({
-                workout,
-                progress
-              });
-              
-              // Add to total minutes
-              this.totalMinutes += workout.duration;
-              
-              // Sort by date (newest first)
-              this.completedWorkouts.sort((a, b) => {
-                return new Date(b.progress.completedDate).getTime() - 
-                      new Date(a.progress.completedDate).getTime();
-              });
-              
-              // Calculate streak (simplified version - consecutive days)
-              this.calculateStreak();
-            }
-          });
-        });
-      });
-    }
+  async loadProgressData() {
+    this.workoutsCompleted = this.progressTracker.getCompletionCount();
+    this.workoutHistory = await this.progressTracker.getDetailedCompletionHistory();
   }
 
-  calculateStreak() {
-    // Simplified streak calculation
-    if (this.completedWorkouts.length === 0) {
-      this.streak = 0;
-      return;
-    }
-    
-    // Start with 1 day streak
-    this.streak = 1;
-    
-    // Note: For a real app, you would implement a more sophisticated
-    // algorithm to track consecutive days of workouts
-  }
-
-  async confirmReset() {
-    const alert = await this.alertController.create({
+  async showResetPrompt() {
+    const alert = await this.alertCtrl.create({
       header: 'Reset Progress',
-      message: 'Are you sure you want to reset all your progress? This cannot be undone.',
+      message: 'Are you sure you want to reset all your workout progress? This action cannot be undone.',
       buttons: [
         {
           text: 'Cancel',
@@ -105,6 +46,7 @@ export class ProgressPage implements OnInit {
         },
         {
           text: 'Reset',
+          role: 'destructive',
           handler: () => {
             this.resetProgress();
           }
@@ -115,34 +57,16 @@ export class ProgressPage implements OnInit {
     await alert.present();
   }
 
-  resetProgress() {
-    const currentUser = this.authService.getCurrentUser();
-    
-    if (currentUser) {
-      this.storageService.resetUserProgress(currentUser.id).subscribe(success => {
-        if (success) {
-          this.completedWorkouts = [];
-          this.totalMinutes = 0;
-          this.streak = 0;
-          this.presentToast('Progress has been reset');
-        }
-      });
+  async resetProgress() {
+    if (await this.progressTracker.resetAllProgress()) {
+      this.workoutsCompleted = 0;
+      this.workoutHistory = [];
     }
   }
 
-  async presentToast(message: string) {
-    const toast = await this.toastController.create({
-      message,
-      duration: 2000,
-      position: 'bottom',
-      color: 'primary'
-    });
-    toast.present();
+  isUserLoggedIn(): boolean {
+    return this.memberService.isAuthenticated();
   }
 
-  navigateToWorkouts() {
-    this.router.navigate(['/tabs/workouts']);
-  }
-
+  
 }
-

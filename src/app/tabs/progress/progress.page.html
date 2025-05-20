@@ -1,65 +1,60 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>My Progress</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Fitness Progress</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="confirmReset()" *ngIf="completedWorkouts.length > 0" 
-        class="reset-button">
-        <ion-icon name="refresh-outline" slot="start"></ion-icon>
-        <span class="reset-text">RESET</span>
+      <ion-button (click)="showResetPrompt()" *ngIf="workoutsCompleted > 0">
+        <ion-icon name="refresh-circle-outline" slot="icon-only"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content>
   <div class="progress-container">
-    <div class="progress-header">
-      <div class="progress-stats">
-        <div class="stat-card">
-          <div class="stat-number">{{ completedWorkouts.length }}</div>
-          <div class="stat-label">Workouts Completed</div>
+    <ion-card>
+      <ion-card-header>
+        <ion-card-title>Your Achievements</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <div class="achievement-stats">
+          <div class="stat-block">
+            <div class="stat-number">{{ workoutsCompleted }}</div>
+            <div class="stat-description">Total Workouts</div>
+          </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-number">{{ totalMinutes }}</div>
-          <div class="stat-label">Total Minutes</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">{{ streak }}</div>
-          <div class="stat-label">Day Streak</div>
-        </div>
-      </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+
+  <div class="workout-history">
+    <h2>Workout History</h2>
+    
+    <ion-list *ngIf="workoutHistory.length > 0">
+      <ion-item *ngFor="let entry of workoutHistory">
+        <ion-thumbnail slot="start">
+          <img [src]="entry.programDetails.coverImage" alt="{{ entry.programDetails.title }}" />
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ entry.programDetails.title }}</h2>
+          <p>{{ entry.programDetails.category }}</p>
+          <p>{{ entry.trackingData.completionTime | date:'MMM d, y' }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+    
+    <div class="empty-state" *ngIf="workoutHistory.length === 0">
+      <ion-icon name="barbell-outline" size="large"></ion-icon>
+      <p>No completed workouts found.</p>
+      <ion-button routerLink="/workout-list">Find Workouts</ion-button>
     </div>
 
-    <div class="section">
-      <h2 class="section-title">
-        <span>Completed Workouts</span>
-      </h2>
-      
-      <div class="no-progress" *ngIf="completedWorkouts.length === 0">
-        <ion-icon name="fitness-outline"></ion-icon>
-        <p>No workouts completed yet</p>
-        <ion-button (click)="navigateToWorkouts()" fill="clear">Browse Workouts</ion-button>
-      </div>
-
-      <ion-list class="completed-list" *ngIf="completedWorkouts.length > 0">
-        <ion-item *ngFor="let item of completedWorkouts" class="completed-item">
-          <div class="completed-content">
-            <div class="completed-image-container">
-              <img [src]="item.workout.imageUrl" [alt]="item.workout.title">
-            </div>
-            <div class="completed-info">
-              <h3 class="completed-title">{{ item.workout.title }}</h3>
-              <div class="completed-meta">
-                <div class="meta-item">
-                  <ion-icon name="time-outline"></ion-icon>
-                  <span>{{ item.workout.duration }} min</span>
-                </div>
-              </div>
-              <div class="completed-type-badge">{{ item.workout.type }}</div>
-            </div>
-          </div>
-        </ion-item>
-      </ion-list>
+    <div class="ion-padding ion-text-center">
+      <ion-button color="danger" (click)="showResetPrompt()">
+        Reset Progress
+      </ion-button>
     </div>
   </div>
 </ion-content>

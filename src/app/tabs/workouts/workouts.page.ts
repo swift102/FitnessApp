@@ -6,61 +6,74 @@ import { Workout } from 'src/model/fitness';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 import { IonicModule } from '@ionic/angular';
+import { FitnessService } from 'src/services/fitness.service';
+import { FitnessProgram } from 'src/model/fitness';
+import { RouterModule, Route } from '@angular/router';
 
 @Component({
   selector: 'app-workouts',
   templateUrl: './workouts.page.html',
   styleUrls: ['./workouts.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule,RouterModule]
 })
 export class WorkoutsPage implements OnInit {
-workouts: Workout[] = [];
-  filteredWorkouts: Workout[] = [];
-  selectedType: string = 'all';
-  types: string[] = ['all', 'Weight Loss', 'Muscle Gain', 'Cardio'];
+ allWorkouts: FitnessProgram[] = [];
+  displayedWorkouts: FitnessProgram[] = [];
+  availableTypes: string[] = [];
   
-  constructor(
-    private workoutService: WorkoutService,
-    private authService: AuthService,
-    private router: Router
-  ) { }
+  constructor(private fitnessService: FitnessService,  private authService: AuthService,    private router: Router) {}
 
   ngOnInit() {
-    // Check if user is authenticated
-    if (!this.authService.isAuthenticated()) {
-      this.router.navigate(['/login']);
+    this.fetchWorkouts();
+  }
+
+  async fetchWorkouts() {
+    try {
+      // Fetch workouts from service
+      this.allWorkouts = await this.fitnessService.retrieveAllPrograms();
+      
+      // Initialize displayed workouts with all workouts
+      this.displayedWorkouts = [...this.allWorkouts];
+      
+      // Generate unique workout types
+      this.generateWorkoutTypes();
+    } catch (error) {
+      console.error('Error fetching workouts:', error);
+    }
+  }
+
+  generateWorkoutTypes() {
+    // Create a unique set of workout types
+    const typeCollection = new Set<string>();
+    
+    // Add each workout type to the set
+    this.allWorkouts.forEach(workout => {
+      if (workout.category) {
+        typeCollection.add(workout.category);
+      }
+    });
+    
+    // Convert set to array
+    this.availableTypes = Array.from(typeCollection);
+  }
+
+  handleTypeChange(event: any) {
+    const typeFilter = event.detail.value;
+    
+    // Reset to all workouts if "All" is selected
+    if (typeFilter === 'All') {
+      this.displayedWorkouts = [...this.allWorkouts];
       return;
     }
     
-    this.loadWorkouts();
+    // Filter workouts by selected type
+    this.displayedWorkouts = this.allWorkouts.filter(
+      workout => workout.category === typeFilter
+    );
   }
 
-  loadWorkouts() {
-    this.workoutService.getAllWorkouts().subscribe(workouts => {
-      this.workouts = workouts;
-      this.filterWorkouts();
-    });
-  }
-
-  filterWorkouts() {
-    if (this.selectedType === 'all') {
-      this.filteredWorkouts = this.workouts;
-    } else {
-      this.filteredWorkouts = this.workouts.filter(w => w.type === this.selectedType);
-    }
-  }
-
-  segmentChanged(event: any) {
-    this.selectedType = event.detail.value;
-    this.filterWorkouts();
-  }
-
-  goToWorkoutDetail(workoutId: string) {
-    this.router.navigate(['/workout-detail', workoutId]);
-  }
-
-  logout() {
+   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
   }

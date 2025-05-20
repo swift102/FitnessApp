@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { FitnessProgram, ActivityTracking } from 'src/app/model/fitness';
+import { ActivityTracking, FitnessProgram } from 'src/model/fitness';
 
 @Injectable({
   providedIn: 'root'

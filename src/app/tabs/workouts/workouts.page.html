@@ -1,60 +1,41 @@
-<ion-header class="workout-header">
-  <ion-toolbar>
-    <ion-title class="workout-title">Workout Programs</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="logout()" class="logout-button">
-        <ion-icon name="log-out-outline"></ion-icon>
-      </ion-button>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab3"></ion-back-button>
     </ion-buttons>
-  </ion-toolbar>
-
-  <ion-toolbar class="segment-toolbar">
-    <ion-segment [value]="selectedType" (ionChange)="segmentChanged($event)" scrollable>
-      <ion-segment-button *ngFor="let type of types" [value]="type">
-        <ion-label>{{ type === 'all' ? 'All' : type }}</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <ion-title>Workout Programs</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="workout-content">
-  <div class="workout-container">
-    <h2 class="section-title">
-      <span>{{ selectedType === 'all' ? 'All Programs' : selectedType }}</span>
-    </h2>
-    
-    <div class="no-workouts" *ngIf="filteredWorkouts.length === 0">
-      <ion-icon name="fitness-outline"></ion-icon>
-      <p>No workouts found for this category</p>
-    </div>
-    
-    <ion-list class="workout-list">
-      <ion-item *ngFor="let workout of filteredWorkouts" 
-                class="workout-card" 
-                detail="false"
-                (click)="goToWorkoutDetail(workout.id)">
-        <div class="workout-card-content">
-          <div class="workout-image-container">
-            <div class="workout-type-badge">{{ workout.type }}</div>
-          </div>
-          
-          <div class="workout-info">
-            <h3 class="workout-title">{{ workout.title }}</h3>
-            <p class="workout-description">{{ workout.description }}</p>
-            
-            <div class="workout-meta">
-              <div class="meta-item">
-                <ion-icon name="time-outline"></ion-icon>
-                <span>{{ workout.duration }} min</span>
-              </div>
-              <div class="meta-item">
-                <ion-icon name="barbell-outline"></ion-icon>
-                <span>{{ workout.exercises.length }} exercises</span>
-              </div>
-            </div>
-          </div>
-        </div>
+<ion-content>
+  <div class="filter-container">
+    <ion-segment (ionChange)="handleTypeChange($event)" value="All">
+      <ion-segment-button value="All">
+        <ion-label>All</ion-label>
+      </ion-segment-button>
+      <ion-segment-button *ngFor="let type of availableTypes" [value]="type">
+        <ion-label>{{ type }}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <div class="workout-grid">
+    <ion-list>
+      <ion-item *ngFor="let workout of displayedWorkouts" [routerLink]="['/workout-detail', workout.uid]" detail="true">
+        <ion-thumbnail slot="start">
+          <img [src]="workout.coverImage" alt="{{ workout.title }}">
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ workout.title }}</h2>
+          <p>{{ workout.category }} | {{ workout.timeFrame }} min | {{ workout.intensityLevel }}</p>
+          <p>{{ workout.summary }}</p>
+        </ion-label>
       </ion-item>
     </ion-list>
+  </div>
+  
+  <div class="empty-state" *ngIf="displayedWorkouts.length === 0">
+    <ion-icon name="fitness-outline" size="large"></ion-icon>
+    <p>No workouts found in this category</p>
   </div>
 </ion-content>

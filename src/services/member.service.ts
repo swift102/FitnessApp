@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Preferences } from '@capacitor/preferences';
-import { Member } from 'src/app/model/fitness';
+import { Member } from 'src/model/fitness';
 
 @Injectable({
   providedIn: 'root'

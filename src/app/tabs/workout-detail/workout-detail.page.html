@@ -1,77 +1,83 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/workouts"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ workout?.title }}</ion-title>
+    <ion-title>{{ workoutData?.title }}</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <div *ngIf="workout" class="workout-detail-container">
-    <div class="workout-image-container">
-      <div class="workout-type-badge">{{ workout.type }}</div>
-    </div>
-
-    <div class="workout-info">
-      <h1 class="workout-title">{{ workout.title }}</h1>
-      <p class="workout-description">{{ workout.description }}</p>
+<ion-content *ngIf="workoutData">
+  <div class="workout-banner">
+    <img [src]="workoutData.coverImage" alt="{{ workoutData.title }}" class="banner-image" />
+    
+    <div class="workout-details">
+      <h1>{{ workoutData.title }}</h1>
+      <p>{{ workoutData.summary }}</p>
       
-      <div class="workout-meta">
-        <div class="meta-item">
-          <ion-icon name="time-outline"></ion-icon>
-          <span>{{ workout.duration }} min</span>
-        </div>
-        <div class="meta-item">
-          <ion-icon name="barbell-outline"></ion-icon>
-          <span>{{ workout.exercises.length }} exercises</span>
-        </div>
+      <div class="workout-stats">
+        <ion-chip>
+          <ion-icon name="hourglass-outline"></ion-icon>
+          <ion-label>{{ workoutData.timeFrame }} min</ion-label>
+        </ion-chip>
+        
+        <ion-chip>
+          <ion-icon name="fitness-outline"></ion-icon>
+          <ion-label>{{ workoutData.category }}</ion-label>
+        </ion-chip>
+        
+        <ion-chip>
+          <ion-icon name="speedometer-outline"></ion-icon>
+          <ion-label>{{ workoutData.intensityLevel }}</ion-label>
+        </ion-chip>
       </div>
-    </div>
-
-    <div class="section">
-      <h2 class="section-title">Exercises</h2>
-      <ion-list>
-        <ion-item *ngFor="let exercise of workout.exercises; let i = index" class="exercise-item">
-          <div class="exercise-content">
-            <div class="exercise-number">{{ i + 1 }}</div>
-            <div class="exercise-info">
-              <h3 class="exercise-name">{{ exercise.name }}</h3>
-              <p class="exercise-description">{{ exercise.description }}</p>
-              
-              <div class="exercise-meta">
-                <div class="meta-item" *ngIf="exercise.duration">
-                  <ion-icon name="time-outline"></ion-icon>
-                  <span>{{ exercise.duration }} sec</span>
-                </div>
-                <div class="meta-item" *ngIf="exercise.sets && exercise.reps">
-                  <ion-icon name="repeat-outline"></ion-icon>
-                  <span>{{ exercise.sets }} sets × {{ exercise.reps }} reps</span>
-                </div>
-              </div>
-              
-              <div class="equipment-tags" *ngIf="exercise.equipment && exercise.equipment.length > 0">
-                <div class="equipment-tag" *ngFor="let equipment of exercise.equipment">
-                  {{ equipment }}
-                </div>
-              </div>
-            </div>
-          </div>
+      
+      <h3>Required Equipment</h3>
+      <ion-list lines="none">
+        <ion-item *ngFor="let equipment of workoutData.gear">
+          <ion-icon name="checkmark-circle-outline" slot="start" color="success"></ion-icon>
+          <ion-label>{{ equipment }}</ion-label>
         </ion-item>
       </ion-list>
     </div>
-    
-    <div class="workout-actions">
-      <ion-button expand="block" class="complete-button" (click)="markAsCompleted()" 
-                  [disabled]="isWorkoutCompleted">
-        <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
-        {{ isWorkoutCompleted ? 'Workout Completed' : 'Mark as Completed' }}
-      </ion-button>
-    </div>
   </div>
   
-  <div *ngIf="!workout" class="loading-container">
-    <ion-spinner></ion-spinner>
-    <p>Loading workout details...</p>
+  <div class="exercise-list">
+    <h2>Workout Plan</h2>
+    
+    <ion-card *ngFor="let exercise of workoutData.activityElements; let i = index">
+      <ion-card-header>
+        <ion-card-subtitle>Step {{ i + 1 }}</ion-card-subtitle>
+        <ion-card-title>{{ exercise.title }}</ion-card-title>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <div class="exercise-parameters">
+          <div *ngIf="exercise.groupCount">
+            <strong>Sets:</strong> {{ exercise.groupCount }}
+          </div>
+          <div *ngIf="exercise.repetitions">
+            <strong>Reps:</strong> {{ exercise.repetitions }}
+          </div>
+          <div *ngIf="exercise.timeFrame">
+            <strong>Time:</strong> {{ exercise.timeFrame }} seconds
+          </div>
+        </div>
+        
+        <p>{{ exercise.steps }}</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
+  
+  <div class="workout-actions">
+    <ion-button expand="block" (click)="completeWorkout()" [disabled]="workoutCompleted" *ngIf="!workoutCompleted">
+      <ion-icon name="trophy-outline" slot="start"></ion-icon>
+      Complete This Workout
+    </ion-button>
+    
+    <ion-button expand="block" disabled *ngIf="workoutCompleted" color="success">
+      <ion-icon name="trophy" slot="start"></ion-icon>
+      Workout Completed
+    </ion-button>
   </div>
 </ion-content>
