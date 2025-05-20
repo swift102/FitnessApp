@@ -1,0 +1,160 @@
+// src/app/workouts/workouts.page.scss
+
+.workout-header {
+    ion-toolbar {
+      --background: #4a90e2;
+      
+      .workout-title {
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+      }
+      
+      .logout-button {
+        --color: white;
+      }
+    }
+    
+    .segment-toolbar {
+      --background: #4a90e2;
+      
+      ion-segment {
+        --background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        margin: 0 10px 10px;
+        
+        ion-segment-button {
+          --color: rgba(255, 255, 255, 0.6);
+          --color-checked: white;
+          --indicator-color: rgba(255, 255, 255, 0.2);
+          text-transform: capitalize;
+          min-width: 100px;
+        }
+      }
+    }
+  }
+  
+  .workout-content {
+    --background: #f8f9fa;
+    
+    .workout-container {
+      padding: 20px;
+      
+      .section-title {
+        color: #2c3e50;
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        text-transform: capitalize;
+        
+        span {
+          margin-left: 8px;
+        }
+      }
+      
+      .no-workouts {
+        text-align: center;
+        padding: 40px 0;
+        
+        ion-icon {
+          font-size: 64px;
+          color: #bdc3c7;
+        }
+        
+        p {
+          color: #7f8c8d;
+          margin-top: 16px;
+          font-size: 1.1rem;
+        }
+      }
+      
+      .workout-list {
+        background: transparent;
+        
+        .workout-card {
+          --background: white;
+          --border-radius: 12px;
+          --padding-start: 0;
+          --inner-padding-end: 0;
+          margin-bottom: 16px;
+          --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+          
+          .workout-card-content {
+            width: 100%;
+            padding: 0;
+            
+            .workout-image-container {
+              position: relative;
+              width: 100%;
+              height: 160px;
+              
+              .workout-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 12px 12px 0 0;
+              }
+              
+              .workout-type-badge {
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                background-color: rgba(0, 0, 0, 0.6);
+                color: white;
+                padding: 4px 10px;
+                border-radius: 16px;
+                font-size: 0.8rem;
+                font-weight: 500;
+              }
+            }
+            
+            .workout-info {
+              padding: 16px;
+              
+              .workout-title {
+                color: #2c3e50;
+                font-size: 1.2rem;
+                font-weight: bold;
+                margin: 0 0 8px;
+              }
+              
+              .workout-description {
+                color: #7f8c8d;
+                font-size: 0.9rem;
+                margin: 0 0 12px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                -webkit-box-orient: vertical;
+              }
+              
+              .workout-meta {
+                display: flex;
+                
+                .meta-item {
+                  display: flex;
+                  align-items: center;
+                  margin-right: 16px;
+                  
+                  ion-icon {
+                    color: #4a90e2;
+                    margin-right: 6px;
+                    font-size: 1rem;
+                  }
+                  
+                  span {
+                    color: #7f8c8d;
+                    font-size: 0.9rem;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
