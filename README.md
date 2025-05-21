@@ -8,10 +8,13 @@
 
 * [x] User registration and authentication
 * [x] Workout session tracking
+* [x] Authentication & user progress stored using Local Storage
+* [x] Dark mode support
+* [x] Cross-platform sync (Android/iOS)
 * [ ] Daily/weekly activity dashboard
 * [ ] Integration with device sensors (steps, heart rate, GPS)
-* [x] Cross-platform sync (Android/iOS)
-* [x] Dark mode support
+
+
 
 ---
 
@@ -21,6 +24,8 @@
 * **Mobile Runtime**: Capacitor
 * **Languages**: TypeScript, SCSS, HTML, Swift, Java
 * **Testing**: Karma, Jasmine (configured)
+* **Storage**: Browser Local Storage (for auth and progress)
+
 
 ---
 
