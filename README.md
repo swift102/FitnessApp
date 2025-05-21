@@ -6,12 +6,12 @@
 
 ## 🚀 Features (Planned / In Progress)
 
-* [ ] User registration and authentication
-* [ ] Workout session tracking
+* [x] User registration and authentication
+* [x] Workout session tracking
 * [ ] Daily/weekly activity dashboard
 * [ ] Integration with device sensors (steps, heart rate, GPS)
-* [ ] Cross-platform sync (Android/iOS)
-* [ ] Dark mode support
+* [x] Cross-platform sync (Android/iOS)
+* [x] Dark mode support
 
 ---
 
